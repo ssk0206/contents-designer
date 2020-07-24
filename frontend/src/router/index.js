@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Home from '../views/Home.vue'
+import Topics from '../views/Topics.vue'
 import Edit from '../views/Edit.vue'
 
 Vue.use(VueRouter)
@@ -20,8 +21,13 @@ Vue.use(VueRouter)
     component: () => import(/* webpackChunkName: "about" */ '../views/About.vue')
   },
   {
-    path: '/edit',
-    name: 'Edit',
+    path: '/topics',
+    name: 'Topics',
+    component: Topics
+  },
+  {
+    path: '/edit/:id',
+    name: 'edit',
     component: Edit
   }
 ]
