@@ -1,0 +1,19 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use Illuminate\Http\Request;
+use Illuminate\Http\JsonResponse;
+use App\Models\Page;
+
+class PageController extends Controller
+{
+    /**
+     * ページリスト表示
+     */
+    public function index(Request $request)
+    {
+        $pages = Page::all();
+        return $pages;
+    }
+}
