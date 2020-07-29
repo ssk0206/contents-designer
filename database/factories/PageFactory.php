@@ -7,6 +7,6 @@ use Faker\Generator as Faker;
 
 $factory->define(Page::class, function (Faker $faker) {
     return [
-        'name' => 'page1',
+        'name' => 'page2',
     ];
 });
