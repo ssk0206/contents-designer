@@ -1,8 +1,8 @@
 <template>
   <div class="edit">
-    <button v-on:click="addComponent(1)">+</button>
+    <button @click="addComponent(1)">+</button>
     <h1>This is an edit page {{ $route.params.id }}</h1>
-    <draggable handle=".handle">
+    <draggable v-model="components" handle=".handle">
       <v-card
       v-for="component in components" :key="component.id"
       class="mx-auto"
@@ -13,15 +13,22 @@
           <v-icon color="grey lighten-1" style="float:right;">mdi-delete</v-icon>
           <v-icon color="grey lighten-1" style="float:right;">mdi-pencil</v-icon>
         </div>
-        <v-divider></v-divider>
-        <p>{{ component.columns[0].id }} {{ component.columns[0].content }}</p>
+        <div>{{ component.columns[0].content }}</div>
       </v-card>
     </draggable>
+    <div>
+     <div><pre>{{formattedItems1}}</pre></div>
+    </div>
   </div>
 </template>
 
 <script>
 import draggable from 'vuedraggable'
+
+function dumpObj(obj) {
+  return JSON.stringify(obj, null, 2)
+}
+
 export default {
   components: {
     draggable
@@ -31,9 +38,28 @@ export default {
       components: [],
     }
   },
+  computed: {
+    formattedItems1() {
+      return dumpObj(this.components);
+    },
+  },
   methods: {
-    addComponent: function(id) {
-      console.log(id)
+    addComponent: function(type) {
+      this.components.push(
+        {
+          "id": this.components.length + 1,
+          "page_id": this.$route.params.id,
+          "type": type,
+          "order": this.components.length + 1,
+          "columns": [
+            {
+              "component_id": this.components.length + 1,
+              "content": "コンテンツが入ります",
+              "order": 1,
+            }
+          ]
+        }
+      );
     }
   },
   created() {
