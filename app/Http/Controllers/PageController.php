@@ -16,4 +16,13 @@ class PageController extends Controller
         $pages = Page::all();
         return $pages;
     }
+
+    /**
+     * ページ編集
+     */
+    public function edit(int $id)
+    {
+        $page = Page::with('components.columns')->find(1);
+        return $page;
+    }
 }
