@@ -2,19 +2,33 @@
   <div class="edit">
     <button v-on:click="addComponent(1)">+</button>
     <h1>This is an edit page {{ $route.params.id }}</h1>
-    <div v-for="(component, index) in components" :key="index">
-      <p v-if="component.type == 1">
-        {{ component.columns[0].content }}
-      </p>
-    </div>
+    <draggable handle=".handle">
+      <v-card
+      v-for="component in components" :key="component.id"
+      class="mx-auto"
+      max-width="600"
+      outlined>
+        <div class="handle" style="background-color:#eee;">
+          <v-icon medium style="float:left;">mdi-drag</v-icon>
+          <v-icon color="grey lighten-1" style="float:right;">mdi-delete</v-icon>
+          <v-icon color="grey lighten-1" style="float:right;">mdi-pencil</v-icon>
+        </div>
+        <v-divider></v-divider>
+        <p>{{ component.columns[0].id }} {{ component.columns[0].content }}</p>
+      </v-card>
+    </draggable>
   </div>
 </template>
 
 <script>
+import draggable from 'vuedraggable'
 export default {
+  components: {
+    draggable
+  },
   data() {
     return {
-      components: []
+      components: [],
     }
   },
   methods: {
@@ -22,7 +36,7 @@ export default {
       console.log(id)
     }
   },
-  mounted() {
+  created() {
     this.axios.get('/api/pages/' + this.$route.params.id + '/edit' ).then((res) => {
       this.components = res.data.components
     })
