@@ -18,4 +18,7 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::resource('pages', 'PageController', ['except' => ['create', 'destroy', 'update']]);
+Route::middleware(['cors'])->group(function () {
+    Route::resource('pages', 'PageController', ['except' => ['create', 'destroy', 'update']]);
+    Route::post('pages/{id}/components', 'ComponentController@store')->name('components.store');
+});
