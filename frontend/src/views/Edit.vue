@@ -18,11 +18,12 @@
             <editor></editor>
           </div>
         </div>
-        <div>{{ component.columns[0].content }}</div>
+        <div v-if="component.columns.length != 0">{{ component.columns[0].content }}</div>
+        <div v-else>コンテンツがありません</div>
       </v-card>
     </draggable>
     <div>
-     <div><pre>{{formattedItems1}}</pre></div>
+     <!-- <div><pre>{{formattedItems1}}</pre></div> -->
     </div>
   </div>
 </template>
@@ -69,6 +70,12 @@ export default {
         }
       )
       this.lastId++
+      this.axios.post('/api/pages/' + this.$route.params.id + '/components', {
+        "type": type,
+        "order": this.components.length + 1,
+      }).then((res) => {
+        console.log(res)
+      })
     },
     deleteComponent: function (index) {
       this.components.splice(index, 1)
