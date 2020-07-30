@@ -43,6 +43,7 @@ export default {
   data() {
     return {
       components: [],
+      lastId: 0,
     }
   },
   computed: {
@@ -54,19 +55,20 @@ export default {
     addComponent: function(type) {
       this.components.push(
         {
-          "id": this.components.length + 1,
+          "id": this.lastId + 1,
           "page_id": this.$route.params.id,
           "type": type,
-          "order": this.components.length + 1,
+          "order": this.lastId + 1,
           "columns": [
             {
-              "component_id": this.components.length + 1,
+              "component_id": this.lastId + 1,
               "content": "コンテンツが入ります",
               "order": 1,
             }
           ]
         }
       )
+      this.lastId++
     },
     deleteComponent: function (index) {
       this.components.splice(index, 1)
@@ -78,6 +80,7 @@ export default {
   created() {
     this.axios.get('/api/pages/' + this.$route.params.id + '/edit' ).then((res) => {
       this.components = res.data.components
+      this.lastId = this.components.length
     })
   },
 }
