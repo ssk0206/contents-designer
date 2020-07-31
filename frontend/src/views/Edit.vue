@@ -19,7 +19,7 @@
         </div>
         <!-- <div v-if="component.columns.length != 0">{{ component.columns[0].content }}</div> -->
         <div style="padding-left:25px">
-          <div v-if="component.columns.length != 0" v-html="component.columns[0].content"></div>
+          <div v-if="!isEmptyComponent(component)" v-html="component.columns[0].content"></div>
           <div v-else>コンテンツがありません</div>
         </div>
       </v-card>
@@ -97,6 +97,17 @@ export default {
       } else {
         this.components[index].columns[0].content = content
       }
+    },
+    isEmptyComponent: function(component) {
+      if (component.columns.length == 0) {
+        return true
+      } else {
+        const ans = component.columns.filter(column => {
+          return column.content === "" || column.content === "<p></p>"
+        })
+        return ans.length > 0
+      }
+      return false
     }
   },
   created() {
