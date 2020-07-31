@@ -2,7 +2,7 @@
   <div class="edit">
     <button @click="addComponent(1)">+</button>
     <h1>This is an edit page {{ $route.params.id }}</h1>
-    <draggable v-model="comp" handle=".handle">
+    <draggable v-model="components" handle=".handle">
       <v-card
         v-for="(component, index) in comp" :key="component.id"
         class="mx-auto"
@@ -23,7 +23,7 @@
       </v-card>
     </draggable>
     <div>
-     <!-- <div><pre>{{formattedItems1}}</pre></div> -->
+     <div><pre>{{formattedItems1}}</pre></div>
     </div>
   </div>
 </template>
