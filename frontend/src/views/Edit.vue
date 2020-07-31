@@ -2,9 +2,9 @@
   <div class="edit">
     <button @click="addComponent(1)">+</button>
     <h1>This is an edit page {{ $route.params.id }}</h1>
-    <draggable v-model="components" handle=".handle">
+    <draggable v-model="comp" handle=".handle">
       <v-card
-        v-for="(component, index) in components" :key="component.id"
+        v-for="(component, index) in comp" :key="component.id"
         class="mx-auto"
         max-width="600"
         outlined
@@ -51,30 +51,27 @@ export default {
     formattedItems1() {
       return dumpObj(this.components);
     },
+    comp() {
+      return this.components
+    }
   },
   methods: {
     addComponent: function(type) {
-      this.components.push(
-        {
-          "id": this.lastId + 1,
-          "page_id": this.$route.params.id,
-          "type": type,
-          "order": this.lastId + 1,
-          "columns": [
-            {
-              "component_id": this.lastId + 1,
-              "content": "コンテンツが入ります",
-              "order": 1,
-            }
-          ]
-        }
-      )
       this.lastId++
       this.axios.post('/api/pages/' + this.$route.params.id + '/components', {
         "type": type,
         "order": this.components.length + 1,
       }).then((res) => {
-        console.log(res)
+        let resData = res.data
+        this.components.push(
+          {
+            "id": resData.id,
+            "page_id": resData.page_id,
+            "type": resData.type,
+            "order": resData.order,
+            "columns": []
+          }
+        )
       })
     },
     deleteComponent: function (index) {

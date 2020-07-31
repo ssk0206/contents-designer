@@ -17,6 +17,6 @@ class ComponentController extends Controller
         $component = new Component;
         $component->fill($request->all());
         $page->components()->save($component);
-        return response('registered', 201);
+        return response()->json($component, 201);
     }
 }
