@@ -4,8 +4,8 @@
     <h1>This is an edit page {{ $route.params.id }}</h1>
     <draggable v-model="components" handle=".handle">
       <v-card
-        v-for="(component, index) in comp" :key="component.id"
-        class="mx-auto"
+        v-for="(component, index) in computedComponent" :key="component.id"
+        class="mx-auto card"
         max-width="600"
         outlined
       >
@@ -15,11 +15,14 @@
             <v-icon color="grey lighten-1" style="float:right;" small>mdi-delete</v-icon>
           </v-btn>
           <div style="margin:0 5px 0 0;float:right;">
-            <editor></editor>
+            <editor :componentId="component.id" @clickOK="displayContent($event, component.id)"></editor>
           </div>
         </div>
-        <div v-if="component.columns.length != 0">{{ component.columns[0].content }}</div>
-        <div v-else>コンテンツがありません</div>
+        <!-- <div v-if="component.columns.length != 0">{{ component.columns[0].content }}</div> -->
+        <div style="padding-left:25px">
+          <div v-if="component.columns.length != 0" v-html="component.columns[0].content"></div>
+          <div v-else>コンテンツがありません</div>
+        </div>
       </v-card>
     </draggable>
     <div>
@@ -34,6 +37,12 @@ import Editor from '../components/Editor.vue'
 
 function dumpObj(obj) {
   return JSON.stringify(obj, null, 2)
+}
+
+function getComponentIndex(components, componentId) {
+  return components.findIndex((comp) => {
+    return (comp.id === componentId);
+  })
 }
 
 export default {
@@ -51,7 +60,7 @@ export default {
     formattedItems1() {
       return dumpObj(this.components);
     },
-    comp() {
+    computedComponent() {
       return this.components
     }
   },
@@ -77,8 +86,18 @@ export default {
     deleteComponent: function (index) {
       this.components.splice(index, 1)
     },
-    openModal: function (componentId) {
-      return componentId
+    displayContent: function(content, componentId) {
+      const index = getComponentIndex(this.components, componentId)
+
+      if (this.components[index].columns.length == 0) {
+        this.components[index].columns.push({
+          component_id: componentId,
+          content: content,
+          order: 1
+        })
+      } else {
+        this.components[index].columns[0].content = content
+      }
     }
   },
   created() {
@@ -89,3 +108,9 @@ export default {
   },
 }
 </script>
+
+<style scoped>
+.card {
+  text-align: left;
+}
+</style>
