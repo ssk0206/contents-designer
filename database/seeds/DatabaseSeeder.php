@@ -15,14 +15,15 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        factory(Page::class, 1)->create()->each(function ($page) {
-            $page->components()->saveMany(factory(Component::class, 4)->create([
-                'page_id' => $page->id
-            ]))->each(function($component) {
-                $component->columns()->save(factory(Column::class)->create([
-                    'component_id' => $component->id
-                ]));
-            });
-        });
+        // factory(Page::class, 1)->create()->each(function ($page) {
+        //     $page->components()->saveMany(factory(Component::class, 4)->create([
+        //         'page_id' => $page->id
+        //     ]))->each(function($component) {
+        //         $component->columns()->save(factory(Column::class)->create([
+        //             'component_id' => $component->id
+        //         ]));
+        //     });
+        // });
+        factory(Page::class, 1)->create();
     }
 }

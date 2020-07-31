@@ -1,7 +1,6 @@
 <template>
   <div class="edit">
     <button @click="addComponent(1)">+</button>
-    <h1>This is an edit page {{ $route.params.id }}</h1>
     <draggable v-model="components" handle=".handle">
       <v-card
         v-for="(component, index) in computedComponent" :key="component.id"

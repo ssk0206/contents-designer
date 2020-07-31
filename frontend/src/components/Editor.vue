@@ -18,7 +18,7 @@
         <v-card-text>
           <v-container>
             <tiptap-vuetify v-model="content" :extensions="extensions" placeholder="コンテンツがありません"  />
-            <div class="mt-3">{{ content }}</div>
+            <!-- <div class="mt-3">{{ content }}</div> -->
           </v-container>
         </v-card-text>
         <v-card-actions>
@@ -52,8 +52,8 @@ import {
   HorizontalRule,
   History,
   Image,
-  TodoList,
-  TodoItem,
+  // TodoList,
+  // TodoItem,
   Table,
   TableCell,
   TableHeader,
@@ -97,12 +97,12 @@ export default {
         Bold,
         Code,
         HorizontalRule,
-        TodoList,
-        [TodoItem, {
-          options: {
-            nested: true
-          }
-        }],
+        // TodoList,
+        // [TodoItem, {
+        //   options: {
+        //     nested: true
+        //   }
+        // }],
         Paragraph,
         HardBreak // line break on Shift + Ctrl + Enter
       ],
