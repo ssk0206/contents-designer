@@ -25,7 +25,18 @@
       </v-card>
     </draggable>
     <div>
-     <div><pre>{{formattedItems1}}</pre></div>
+      <div><pre>{{formattedItems1}}</pre></div>
+      <v-btn
+        v-show="!hidden"
+        color="teal"
+        dark
+        absolute
+        bottom
+        right
+        fixed
+      >
+        <v-icon>mdi-floppy</v-icon> 下書き保存
+      </v-btn>
     </div>
   </div>
 </template>
