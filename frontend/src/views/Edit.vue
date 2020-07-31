@@ -14,7 +14,7 @@
             <v-icon color="grey lighten-1" style="float:right;" small>mdi-delete</v-icon>
           </v-btn>
           <div style="margin:0 5px 0 0;float:right;">
-            <editor :componentId="component.id" @clickOK="displayContent($event, component.id)"></editor>
+            <editor :componentId="component.id" :propsContent="componentData(component.columns)" @clickOK="displayContent($event, component.id)"></editor>
           </div>
         </div>
         <!-- <div v-if="component.columns.length != 0">{{ component.columns[0].content }}</div> -->
@@ -27,13 +27,13 @@
     <div>
       <div><pre>{{formattedItems1}}</pre></div>
       <v-btn
-        v-show="!hidden"
         color="teal"
         dark
         absolute
         bottom
         right
         fixed
+        @click="saveComponents"
       >
         <v-icon>mdi-floppy</v-icon> 下書き保存
       </v-btn>
@@ -72,9 +72,17 @@ export default {
     },
     computedComponent() {
       return this.components
-    }
+    },
+
   },
   methods: {
+    componentData(columns) {
+      if (columns.length != 0) {
+        return columns[0].content
+      } else {
+        this.content
+      }
+    },
     addComponent: function(type) {
       this.lastId++
       this.axios.post('/api/pages/' + this.$route.params.id + '/components', {
@@ -119,14 +127,23 @@ export default {
         return ans.length > 0
       }
       return false
+    },
+    saveComponents() {
+      this.axios.put('/api/pages/' + this.$route.params.id + '/components',
+        this.components
+      ).then((res) => {
+        console.log(res.data)
+      })
     }
   },
   created() {
     this.axios.get('/api/pages/' + this.$route.params.id + '/edit' ).then((res) => {
-      this.components = res.data.components
+      this.components = res.data.components.sort(function(a, b) {
+        return a.order-b.order
+      })
       this.lastId = this.components.length
     })
-  },
+  }
 }
 </script>
 

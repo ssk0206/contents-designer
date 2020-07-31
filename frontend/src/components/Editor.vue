@@ -65,7 +65,8 @@ export default {
     TiptapVuetify,
   },
   props: {
-    componentId: Number
+    componentId: Number,
+    propsContent: String,
   },
   data() {
     return {
@@ -106,9 +107,9 @@ export default {
         Paragraph,
         HardBreak // line break on Shift + Ctrl + Enter
       ],
-      content: ``,
+      content: this.propsContent,
     }
-  },
+  }
 }
 </script>
 
