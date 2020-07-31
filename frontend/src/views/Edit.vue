@@ -18,7 +18,7 @@
           </div>
         </div>
         <!-- <div v-if="component.columns.length != 0">{{ component.columns[0].content }}</div> -->
-        <div style="padding-left:25px">
+        <div style="padding:0 35px 0 25px">
           <div v-if="!isEmptyComponent(component)" v-html="component.columns[0].content"></div>
           <div v-else>コンテンツがありません</div>
         </div>
