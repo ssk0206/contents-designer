@@ -1,30 +1,31 @@
 <template>
   <div class="edit">
-    <button @click="addComponent(1)">+</button>
-      <draggable v-model="components" handle=".handle">
-        <v-card
-          v-for="(component, index) in computedComponent" :key="component.id"
-          class="mx-auto card"
-          max-width="600"
-          outlined
-        >
-          <div class="handle" style="background-color:#eee;">
-            <v-icon medium style="float:left;">mdi-drag</v-icon>
-            <v-btn icon small style="float:right;" height="23" width="23" @click="deleteComponent(index)">
-              <v-icon color="grey lighten-1" style="float:right;" small>mdi-delete</v-icon>
-            </v-btn>
-            <div style="margin:0 5px 0 0;float:right;">
-              <editor :componentIndex="index" :propsContent="componentData(component.columns)" @clickOK="displayContent($event, index)"></editor>
-            </div>
+    <draggable v-model="components" handle=".handle">
+      <v-card
+        v-for="(component, index) in computedComponent" :key="component.id"
+        class="mx-auto card"
+        max-width="600"
+        outlined
+      >
+        <div class="handle" style="background-color:#eee;">
+          <v-icon medium style="float:left;">mdi-drag</v-icon>
+          <v-btn icon small style="float:right;" height="23" width="23" @click="deleteComponent(index)">
+            <v-icon color="grey lighten-1" style="float:right;" small>mdi-delete</v-icon>
+          </v-btn>
+          <div style="margin:0 5px 0 0;float:right;">
+            <editor :componentIndex="index" :propsContent="componentData(component.columns)" @clickOK="displayContent($event, index)"></editor>
           </div>
-          <!-- <div v-if="component.columns.length != 0">{{ component.columns[0].content }}</div> -->
-          <div style="padding:0 35px 0 25px">
-            <div v-if="!isEmptyComponent(component)" v-html="component.columns[0].content"></div>
-            <div v-else>コンテンツがありません</div>
-          </div>
-        </v-card>
-      </draggable>
-      <div><pre>{{formattedItems1}}</pre></div>
+        </div>
+        <div style="padding:0 35px 0 25px">
+          <div v-if="!isEmptyComponent(component)" v-html="component.columns[0].content"></div>
+          <div v-else>コンテンツがありません</div>
+        </div>
+      </v-card>
+    </draggable>
+    <v-btn icon @click="addComponent(1)">
+      <v-icon>mdi-plus-circle</v-icon>
+    </v-btn>
+    <div><pre>{{formattedItems1}}</pre></div>
     <div>
       <v-btn
         v-bind:disabled="isProcessing()"
