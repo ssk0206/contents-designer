@@ -26,16 +26,31 @@ class ComponentController extends Controller
      */
     public function update(Request $request, $id)
     {
+        $newComponent = [];
         foreach ($request->all() as $key => $value) {
-            $component = Component::find($value['id']);
+            $component = Component::where('id', $value['id'])->first();
+
+            if (is_null($component)){
+                $component = Component::create([
+                    'page_id' => $value['page_id'],
+                    'type' => $value['type'],
+                    'order' => $key+1,
+                ]);
+                $newComponent[] = $component;
+            }
+
             $component->update(['order' => $key+1]);
             foreach ($value['columns'] as $arr) {
+                $arr['component_id'] = $component->id;
                 $component->columns()->updateOrCreate(
                     ['component_id' => $arr['component_id'], 'order' => $arr['order']],
                     $arr
                 );
             }
         }
-        return response(204);
+        if (empty($newComponent)) {
+            return response(204);
+        }
+        return response()->json($newComponent, 201);
     }
 }

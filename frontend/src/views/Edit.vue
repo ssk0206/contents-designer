@@ -14,7 +14,7 @@
               <v-icon color="grey lighten-1" style="float:right;" small>mdi-delete</v-icon>
             </v-btn>
             <div style="margin:0 5px 0 0;float:right;">
-              <editor :componentId="component.id" :propsContent="componentData(component.columns)" @clickOK="displayContent($event, component.id)"></editor>
+              <editor :componentIndex="index" :propsContent="componentData(component.columns)" @clickOK="displayContent($event, index)"></editor>
             </div>
           </div>
           <!-- <div v-if="component.columns.length != 0">{{ component.columns[0].content }}</div> -->
@@ -24,6 +24,7 @@
           </div>
         </v-card>
       </draggable>
+      <div><pre>{{formattedItems1}}</pre></div>
     <div>
       <v-btn
         color="teal"
@@ -48,11 +49,7 @@ function dumpObj(obj) {
   return JSON.stringify(obj, null, 2)
 }
 
-function getComponentIndex(components, componentId) {
-  return components.findIndex((comp) => {
-    return (comp.id === componentId);
-  })
-}
+let id_cnt = 0
 
 export default {
   components: {
@@ -83,38 +80,46 @@ export default {
       }
     },
     addComponent: function(type) {
-      this.lastId++
-      this.axios.post('/api/pages/' + this.$route.params.id + '/components', {
+      // this.lastId++
+      // this.axios.post('/api/pages/' + this.$route.params.id + '/components', {
+      //   "type": type,
+      //   "order": this.components.length + 1,
+      // }).then((res) => {
+      //   let resData = res.data
+      //   this.components.push(
+      //     {
+      //       "id": resData.id,
+      //       "page_id": resData.page_id,
+      //       "type": resData.type,
+      //       "order": resData.order,
+      //       "columns": []
+      //     }
+      //   )
+      // })
+      this.components.push({
+        "id": id_cnt--,
+        "page_id": this.$route.params.id,
         "type": type,
         "order": this.components.length + 1,
-      }).then((res) => {
-        let resData = res.data
-        this.components.push(
-          {
-            "id": resData.id,
-            "page_id": resData.page_id,
-            "type": resData.type,
-            "order": resData.order,
-            "columns": []
-          }
-        )
+        "columns": []
       })
     },
     deleteComponent: function (index) {
       this.components.splice(index, 1)
     },
-    displayContent: function(content, componentId) {
-      const index = getComponentIndex(this.components, componentId)
+    displayContent: function(content, index) {
+      // const index = getComponentIndex(this.components, componentId)
 
       if (this.components[index].columns.length == 0) {
         this.components[index].columns.push({
-          component_id: componentId,
+          component_id: 0,
           content: content,
           order: 1
         })
       } else {
         this.components[index].columns[0].content = content
       }
+
     },
     isEmptyComponent: function(component) {
       if (component.columns.length == 0) {
@@ -125,13 +130,16 @@ export default {
         })
         return ans.length > 0
       }
-      return false
     },
     saveComponents() {
       this.axios.put('/api/pages/' + this.$route.params.id + '/components',
         this.components
       ).then((res) => {
-        console.log(res.data)
+        if (res.status === 201) {
+          res.data.forEach(ele => {
+            this.components[ele.order-1].id = ele.id
+          });
+        }
       })
     }
   },
