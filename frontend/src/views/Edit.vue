@@ -80,22 +80,6 @@ export default {
       }
     },
     addComponent: function(type) {
-      // this.lastId++
-      // this.axios.post('/api/pages/' + this.$route.params.id + '/components', {
-      //   "type": type,
-      //   "order": this.components.length + 1,
-      // }).then((res) => {
-      //   let resData = res.data
-      //   this.components.push(
-      //     {
-      //       "id": resData.id,
-      //       "page_id": resData.page_id,
-      //       "type": resData.type,
-      //       "order": resData.order,
-      //       "columns": []
-      //     }
-      //   )
-      // })
       this.components.push({
         "id": id_cnt--,
         "page_id": this.$route.params.id,
@@ -108,8 +92,6 @@ export default {
       this.components.splice(index, 1)
     },
     displayContent: function(content, index) {
-      // const index = getComponentIndex(this.components, componentId)
-
       if (this.components[index].columns.length == 0) {
         this.components[index].columns.push({
           component_id: 0,
