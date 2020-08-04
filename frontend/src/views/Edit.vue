@@ -27,6 +27,7 @@
       <div><pre>{{formattedItems1}}</pre></div>
     <div>
       <v-btn
+        v-bind:disabled="isProcessing()"
         color="teal"
         dark
         absolute
@@ -42,6 +43,7 @@
 </template>
 
 <script>
+import Processing from '../mixins/ButtonMixin'
 import draggable from 'vuedraggable'
 import Editor from '../components/Editor.vue'
 
@@ -52,6 +54,7 @@ function dumpObj(obj) {
 let id_cnt = 0
 
 export default {
+  mixins: [Processing],
   components: {
     draggable,
     Editor
@@ -106,6 +109,8 @@ export default {
     isEmptyComponent: function(component) {
       if (component.columns.length == 0) {
         return true
+      } else if(!component.columns[0].content) {
+        return true
       } else {
         const ans = component.columns.filter(column => {
           return column.content === "" || column.content === "<p></p>"
@@ -114,6 +119,7 @@ export default {
       }
     },
     saveComponents() {
+      this.startProcessing()
       this.axios.put('/api/pages/' + this.$route.params.id + '/components',
         this.components
       ).then((res) => {
@@ -122,6 +128,10 @@ export default {
             this.components[ele.order-1].id = ele.id
           });
         }
+        this.components.forEach((ele, index) => {
+          ele.order = index+1
+        })
+        this.endProcessing()
       })
     }
   },

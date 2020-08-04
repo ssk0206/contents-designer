@@ -27,24 +27,24 @@ class ComponentController extends Controller
     public function update(Request $request, $id)
     {
         $newComponent = [];
-        foreach ($request->all() as $key => $value) {
+        foreach ($request->all() as $index => $value) {
             $component = Component::where('id', $value['id'])->first();
 
             if (is_null($component)){
                 $component = Component::create([
                     'page_id' => $value['page_id'],
                     'type' => $value['type'],
-                    'order' => $key+1,
+                    'order' => $index+1,
                 ]);
                 $newComponent[] = $component;
             }
 
-            $component->update(['order' => $key+1]);
-            foreach ($value['columns'] as $arr) {
-                $arr['component_id'] = $component->id;
+            $component->update(['order' => $index+1]);
+            foreach ($value['columns'] as $columns) {
+                $columns['component_id'] = $component->id;
                 $component->columns()->updateOrCreate(
-                    ['component_id' => $arr['component_id'], 'order' => $arr['order']],
-                    $arr
+                    ['component_id' => $columns['component_id'], 'order' => $columns['order']],
+                    $columns
                 );
             }
         }
