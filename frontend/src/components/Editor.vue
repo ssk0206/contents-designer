@@ -1,6 +1,6 @@
 <template>
-  <v-row justify="center">
-    <v-dialog v-model="dialog" persistent max-width="600px">
+  <v-row justify="center" style="max-height:1000px">
+    <v-dialog v-model="dialog" persistent max-width="1000px" max-height="1000px;">
       <template v-slot:activator="{ on, attrs }">
           <v-btn
             icon
@@ -15,54 +15,16 @@
           </v-btn>
       </template>
       <v-card>
-        <v-card-title>
-          <span class="headline">User Profile</span>
-        </v-card-title>
         <v-card-text>
           <v-container>
-            <v-row>
-              <v-col cols="12" sm="6" md="4">
-                <v-text-field label="Legal first name*" required></v-text-field>
-              </v-col>
-              <v-col cols="12" sm="6" md="4">
-                <v-text-field label="Legal middle name" hint="example of helper text only on focus"></v-text-field>
-              </v-col>
-              <v-col cols="12" sm="6" md="4">
-                <v-text-field
-                  label="Legal last name*"
-                  hint="example of persistent helper text"
-                  persistent-hint
-                  required
-                ></v-text-field>
-              </v-col>
-              <v-col cols="12">
-                <v-text-field label="Email*" required></v-text-field>
-              </v-col>
-              <v-col cols="12">
-                <v-text-field label="Password*" type="password" required></v-text-field>
-              </v-col>
-              <v-col cols="12" sm="6">
-                <v-select
-                  :items="['0-17', '18-29', '30-54', '54+']"
-                  label="Age*"
-                  required
-                ></v-select>
-              </v-col>
-              <v-col cols="12" sm="6">
-                <v-autocomplete
-                  :items="['Skiing', 'Ice hockey', 'Soccer', 'Basketball', 'Hockey', 'Reading', 'Writing', 'Coding', 'Basejump']"
-                  label="Interests"
-                  multiple
-                ></v-autocomplete>
-              </v-col>
-            </v-row>
+            <tiptap-vuetify v-model="content" :extensions="extensions" placeholder="コンテンツがありません"  />
+            <!-- <div class="mt-3">{{ content }}</div> -->
           </v-container>
-          <small>*indicates required field</small>
         </v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn color="blue darken-1" text @click="dialog = false">Close</v-btn>
-          <v-btn color="blue darken-1" text @click="dialog = false">Save</v-btn>
+          <v-btn color="blue darken-1" text @click="dialog = false">戻る</v-btn>
+          <v-btn color="blue darken-1" text @click="dialog = false, $emit('clickOK', content)">OK</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -70,9 +32,89 @@
 </template>
 
 <script>
-  export default {
-    data: () => ({
+import {
+  // component
+  TiptapVuetify,
+  // extensions
+  Heading,
+  Bold,
+  Italic,
+  Strike,
+  Underline,
+  Code,
+  Paragraph,
+  BulletList,
+  OrderedList,
+  ListItem,
+  Link,
+  Blockquote,
+  HardBreak,
+  HorizontalRule,
+  History,
+  Image,
+  // TodoList,
+  // TodoItem,
+  Table,
+  TableCell,
+  TableHeader,
+  TableRow
+} from 'tiptap-vuetify'
+
+export default {
+  components: {
+    TiptapVuetify,
+  },
+  props: {
+    componentId: Number,
+    propsContent: String,
+  },
+  data() {
+    return {
       dialog: false,
-    }),
+      extensions: [
+        History,
+        Table,
+        TableCell,
+        TableHeader,
+        TableRow,
+        Blockquote,
+        Link,
+        Underline,
+        Strike,
+        Italic,
+        ListItem, // if you need to use a list (BulletList, OrderedList)
+        BulletList,
+        OrderedList,
+        Image,
+        [
+          Heading,
+          {
+            // Options that fall into the tiptap's extension
+            options: {
+              levels: [1, 2, 3]
+            }
+          }
+        ],
+        Bold,
+        Code,
+        HorizontalRule,
+        // TodoList,
+        // [TodoItem, {
+        //   options: {
+        //     nested: true
+        //   }
+        // }],
+        Paragraph,
+        HardBreak // line break on Shift + Ctrl + Enter
+      ],
+      content: this.propsContent,
+    }
   }
+}
 </script>
+
+<style>
+.tiptap-vuetify-editor__content {
+  text-align: left;
+}
+</style>

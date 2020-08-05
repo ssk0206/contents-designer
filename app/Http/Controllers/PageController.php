@@ -22,7 +22,7 @@ class PageController extends Controller
      */
     public function edit(int $id)
     {
-        $page = Page::with('components.columns')->find(1);
+        $page = Page::with('components.columns')->find($id);
         return $page;
     }
 }

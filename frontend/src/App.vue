@@ -1,12 +1,30 @@
 <template>
   <v-app>
-    <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link> |
-      <router-link to="/topics">Topics</router-link>
-    </div>
+    <v-app-bar
+      src="https://cdn.vuetifyjs.com/images/backgrounds/vbanner.jpg"
+      dense
+      dark
+      fixed
+      flat
+      outlined
+    >
+      <v-toolbar-title>Contents Designer</v-toolbar-title>
+      <v-spacer></v-spacer>
+        <router-link to="/about">
+        <v-btn icon>
+          <v-icon>mdi-information</v-icon>
+        </v-btn>
+        </router-link>
+        <router-link to="/topics">
+          <v-btn icon>
+            <v-icon>mdi-folder</v-icon>
+          </v-btn>
+        </router-link>
+    </v-app-bar>
     <v-main>
-      <router-view/>
+    <v-container fluid>
+      <router-view style="margin-top:49px;" />
+    </v-container>
     </v-main>
   </v-app>
 </template>
