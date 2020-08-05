@@ -1,44 +1,50 @@
 <template>
   <div class="edit">
-    <draggable class="list-group">
-     <v-navigation-drawer
-          permanent
-          expand-on-hover
-          fixed
-          style="margin-top:49px;"
+      <v-navigation-drawer
+        mini-variant
+        fixed
+        style="padding-top:49px;"
+        clipped
+      >
+        <v-list
+          nav
+          dense
         >
-          <v-list
-            nav
-            dense
-          >
           <v-list-item-group color="primary">
-            <v-list-item link>
-              <v-list-item-icon>
-                <v-icon>mdi-folder</v-icon>
-              </v-list-item-icon>
-              <v-list-item-content>
-                <v-list-item-title>
-                My Files
-                </v-list-item-title>
-              </v-list-item-content>
-            </v-list-item>
-            <v-list-item link>
-              <v-list-item-icon>
-                <v-icon>mdi-account-multiple</v-icon>
-              </v-list-item-icon>
-              <v-list-item-title>Shared with me</v-list-item-title>
-            </v-list-item>
-            <v-list-item link>
-              <v-list-item-icon>
-                <v-icon>mdi-star</v-icon>
-              </v-list-item-icon>
-              <v-list-item-title>Starred</v-list-item-title>
-            </v-list-item>
+            <v-menu :offset-x="true">
+              <template v-slot:activator="{ on, attrs }">
+                <v-list-item
+                  link
+                  v-bind="attrs"
+                  v-on="on">
+                  <v-list-item-icon>
+                    <v-icon>mdi-plus-box</v-icon>
+                  </v-list-item-icon>
+                  <v-list-item-content style="">
+                    <v-list-item-title>
+                      コンポーネント追加
+                    </v-list-item-title>
+                  </v-list-item-content>
+                </v-list-item>
+              </template>
+
+              <v-list>
+                <v-subheader>Subheader</v-subheader>
+                <draggable class="list-group">
+                  <v-list-item
+                    dense
+                    v-for="(item, index) in items"
+                    :key="index"
+                  >
+                    <v-list-item-title>{{ item.title }}</v-list-item-title>
+                  </v-list-item>
+                </draggable>
+              </v-list>
+            </v-menu>
           </v-list-item-group>
-          </v-list>
-        </v-navigation-drawer>
-    </draggable>
-    <draggable v-model="components" handle=".handle">
+        </v-list>
+      </v-navigation-drawer>
+    <draggable v-model="components" handle=".handle" class="list-group">
       <v-card
         v-for="(component, index) in computedComponent" :key="component.id"
         class="mx-auto card"
@@ -61,7 +67,7 @@
       </v-card>
     </draggable>
     <v-btn icon @click="addComponent(1)">
-      <v-icon>mdi-plus-circle</v-icon>
+      <v-icon>mdi-plus-box</v-icon>
     </v-btn>
     <div><pre>{{formattedItems1}}</pre></div>
     <div>
@@ -102,6 +108,12 @@ export default {
     return {
       components: [],
       lastId: 0,
+      items: [
+        { title: 'Click Me' },
+        { title: 'Click Me' },
+        { title: 'Click Me' },
+        { title: 'Click Me 2' },
+      ],
     }
   },
   computed: {
