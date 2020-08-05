@@ -30,7 +30,11 @@
 
               <v-list>
                 <v-subheader>コンポーネントリスト</v-subheader>
-                <draggable class="list-group" group="components" v-model="newComponents">
+                <draggable class="list-group"
+                  :group="{ name: 'components', pull: 'clone', put: false }"
+                  :clone="cloneComponent"
+                  v-model="newComponents"
+                >
                   <v-list-item
                     dense
                     v-for="(item, index) in newComponents"
@@ -198,6 +202,17 @@ export default {
         })
         this.endProcessing()
       })
+    },
+    cloneComponent() {
+      return {
+        id: id_cnt--,
+        page_id: this.$route.params.id,
+        type: 1,
+        order: 0,
+        columns: [],
+        title: '1 column',
+        icon: 'mdi-format-align-justify'
+      }
     }
   },
   created() {
