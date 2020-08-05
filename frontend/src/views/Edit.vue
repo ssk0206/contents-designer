@@ -29,14 +29,19 @@
               </template>
 
               <v-list>
-                <v-subheader>Subheader</v-subheader>
-                <draggable class="list-group">
+                <v-subheader>コンポーネントリスト</v-subheader>
+                <draggable class="list-group" group="components" v-model="newComponents">
                   <v-list-item
                     dense
-                    v-for="(item, index) in items"
+                    v-for="(item, index) in newComponents"
                     :key="index"
                   >
-                    <v-list-item-title>{{ item.title }}</v-list-item-title>
+                    <v-list-item-avatar>
+                      <v-icon>{{ item.icon }}</v-icon>
+                    </v-list-item-avatar>
+                    <v-list-item-content>
+                      <v-list-item-title>{{ item.title }}</v-list-item-title>
+                    </v-list-item-content>
                   </v-list-item>
                 </draggable>
               </v-list>
@@ -44,7 +49,7 @@
           </v-list-item-group>
         </v-list>
       </v-navigation-drawer>
-    <draggable v-model="components" handle=".handle" class="list-group">
+    <draggable v-model="components" handle=".handle" class="list-group" group="components">
       <v-card
         v-for="(component, index) in computedComponent" :key="component.id"
         class="mx-auto card"
@@ -108,11 +113,20 @@ export default {
     return {
       components: [],
       lastId: 0,
-      items: [
-        { title: 'Click Me' },
-        { title: 'Click Me' },
-        { title: 'Click Me' },
-        { title: 'Click Me 2' },
+      newComponents: [
+        {
+          id: id_cnt--,
+          page_id: this.$route.params.id,
+          type: 1,
+          order: 0,
+          columns: [],
+          title: '1 column',
+          icon: 'mdi-format-align-justify'
+        },
+        {
+          title: '2 columns',
+          icon: 'mdi-format-columns'
+        },
       ],
     }
   },
