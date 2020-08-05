@@ -1,5 +1,43 @@
 <template>
   <div class="edit">
+    <draggable class="list-group">
+     <v-navigation-drawer
+          permanent
+          expand-on-hover
+          fixed
+          style="margin-top:49px;"
+        >
+          <v-list
+            nav
+            dense
+          >
+          <v-list-item-group color="primary">
+            <v-list-item link>
+              <v-list-item-icon>
+                <v-icon>mdi-folder</v-icon>
+              </v-list-item-icon>
+              <v-list-item-content>
+                <v-list-item-title>
+                My Files
+                </v-list-item-title>
+              </v-list-item-content>
+            </v-list-item>
+            <v-list-item link>
+              <v-list-item-icon>
+                <v-icon>mdi-account-multiple</v-icon>
+              </v-list-item-icon>
+              <v-list-item-title>Shared with me</v-list-item-title>
+            </v-list-item>
+            <v-list-item link>
+              <v-list-item-icon>
+                <v-icon>mdi-star</v-icon>
+              </v-list-item-icon>
+              <v-list-item-title>Starred</v-list-item-title>
+            </v-list-item>
+          </v-list-item-group>
+          </v-list>
+        </v-navigation-drawer>
+    </draggable>
     <draggable v-model="components" handle=".handle">
       <v-card
         v-for="(component, index) in computedComponent" :key="component.id"
