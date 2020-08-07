@@ -34,12 +34,17 @@ class ComponentController extends Controller
                 $component = Component::create([
                     'page_id' => $value['page_id'],
                     'type' => $value['type'],
+                    'trash' => $value['trash'],
                     'order' => $index+1,
                 ]);
                 $newComponent[] = $component;
             }
 
-            $component->update(['order' => $index+1]);
+            $component->update([
+                'trash' => $value['trash'],
+                'order' => $index+1
+            ]);
+
             foreach ($value['columns'] as $columns) {
                 $columns['component_id'] = $component->id;
                 $component->columns()->updateOrCreate(
@@ -52,5 +57,16 @@ class ComponentController extends Controller
             return response(204);
         }
         return response()->json($newComponent, 201);
+    }
+
+    public function destroy(Request $request, $id)
+    {
+        foreach ($request->all() as $key => $value) {
+            $component = Component::where('id', $value['id'])->first();
+            if (!is_null($component)) {
+                $component->delete();
+            }
+        }
+        return response(200);
     }
 }
