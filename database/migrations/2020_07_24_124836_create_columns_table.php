@@ -20,7 +20,7 @@ class CreateColumnsTable extends Migration
             $table->integer('order')->comment('順番');
             $table->timestamps();
 
-            $table->foreign('component_id')->references('id')->on('components');
+            $table->foreign('component_id')->references('id')->on('components')->onDelete('cascade');
         });
     }
 

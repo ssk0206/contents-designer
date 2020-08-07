@@ -59,10 +59,11 @@
         class="mx-auto card"
         max-width="600"
         outlined
+        v-show="!component.trash"
       >
         <div class="handle" style="background-color:#eee;">
           <v-icon medium style="float:left;">mdi-drag</v-icon>
-          <v-btn icon small style="float:right;" height="23" width="23" @click="deleteComponent(index)">
+          <v-btn icon small style="float:right;" height="23" width="23" @click="addTrashFlag(index)">
             <v-icon color="grey lighten-1" style="float:right;" small>mdi-delete</v-icon>
           </v-btn>
           <div style="margin:0 5px 0 0;float:right;">
@@ -85,14 +86,55 @@
         color="teal"
         dark
         absolute
-        bottom
+        top
         right
         fixed
         @click="saveComponents"
+        style="margin-top:50px;"
       >
         <v-icon>mdi-floppy</v-icon> 下書き保存
       </v-btn>
     </div>
+    <div>
+    </div>
+    <v-menu offset-y>
+      <template v-slot:activator="{ on, attrs }">
+        <v-btn
+          color="grey darken-1"
+          dark
+          absolute
+          x-large
+          icon
+          bottom
+          right
+          fixed
+            v-bind="attrs"
+            v-on="on"
+        >
+          <v-icon>mdi-delete</v-icon>
+        </v-btn>
+      </template>
+      <v-card>
+      <v-list>
+        <v-list-item
+          v-for="(component, index) in trashBox"
+          :key="index"
+        >
+          <v-list-item-content>
+            <v-list-item-title >{{ component.title }}</v-list-item-title>
+            <v-list-item-subtitle v-if="!isEmptyComponent(component)" v-text="component.columns[0].content.substr( 0, 10 )"></v-list-item-subtitle>
+            <v-list-item-subtitle v-else v-text="'空のコンポーネント'"></v-list-item-subtitle>
+          </v-list-item-content>
+        </v-list-item>
+      </v-list>
+      <v-card-actions>
+          <v-spacer></v-spacer>
+
+          <v-btn text @click="menu = false">キャンセル</v-btn>
+          <v-btn color="red" text @click="deleteTrash()">ゴミ箱を空にする</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-menu>
   </div>
 </template>
 
@@ -123,6 +165,7 @@ export default {
           page_id: this.$route.params.id,
           type: 1,
           order: 0,
+          trash: 0,
           columns: [],
           title: '1 column',
           icon: 'mdi-format-align-justify'
@@ -132,6 +175,7 @@ export default {
           icon: 'mdi-format-columns'
         },
       ],
+      trashBox: []
     }
   },
   computed: {
@@ -153,15 +197,14 @@ export default {
     },
     addComponent: function(type) {
       this.components.push({
-        "id": id_cnt--,
-        "page_id": this.$route.params.id,
-        "type": type,
-        "order": this.components.length + 1,
-        "columns": []
+        id: id_cnt--,
+        page_id: this.$route.params.id,
+        type: type,
+        trash: false,
+        order: this.components.length + 1,
+        columns: [],
+        title: '1 column',
       })
-    },
-    deleteComponent: function (index) {
-      this.components.splice(index, 1)
     },
     displayContent: function(content, index) {
       if (this.components[index].columns.length == 0) {
@@ -209,10 +252,23 @@ export default {
         page_id: this.$route.params.id,
         type: 1,
         order: 0,
+        trash: false,
         columns: [],
         title: '1 column',
         icon: 'mdi-format-align-justify'
       }
+    },
+    addTrashFlag(index) {
+      this.components[index].trash = true
+      this.trashBox.push(this.components[index])
+    },
+    deleteTrash() {
+      const trash = this.components.filter(function(component){
+        return component.trash == true
+      })
+      this.axios.delete('/api/pages/' + this.$route.params.id + '/components', { data: trash }).then(() => {
+        this.trashBox = []
+      })
     }
   },
   created() {
@@ -221,6 +277,9 @@ export default {
         return a.order-b.order
       })
       this.lastId = this.components.length
+      this.trashBox = this.components.filter(function(component){
+        return component.trash == true
+      })
     })
   }
 }

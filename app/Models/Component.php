@@ -9,6 +9,7 @@ class Component extends Model
     protected $fillable = [
         'page_id',
         'type',
+        'trash',
         'order',
     ];
 
