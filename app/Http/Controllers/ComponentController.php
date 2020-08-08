@@ -3,19 +3,17 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Repositories\ComponentRepository;
+// use App\Repositories\ComponentRepository;
 use App\Repositories\Interfaces\ComponentRepositoryInterface;
 
 
 class ComponentController extends Controller
 {
-    private ComponentRepositoryInterface $componentRepo;
+    private $componentRepo;
 
-    public function __construct(
-        ComponentRepositoryInterface $componentRepo = null
-    )
+    public function __construct(ComponentRepositoryInterface $componentRepo)
     {
-        $this->componentRepo = $componentRepo ?? new ComponentRepository;
+        $this->componentRepo = $componentRepo;
     }
 
     /**

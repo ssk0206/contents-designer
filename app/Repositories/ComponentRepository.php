@@ -8,15 +8,12 @@ use Illuminate\Support\Facades\DB;
 
 class ComponentRepository implements ComponentRepositoryInterface
 {
-    private $component = null;
+    private $component;
 
-    public function __construct(
-        Component $component = null
-    )
+    public function __construct()
     {
-        $this->component = $component ?? new Component();
+        $this->component = new Component();
     }
-
 
     /**
      * update
