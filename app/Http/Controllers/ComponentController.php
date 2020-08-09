@@ -3,22 +3,17 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\Page;
-use App\Models\Component;
-use App\Models\Column;
+// use App\Repositories\ComponentRepository;
+use App\Repositories\Interfaces\ComponentRepositoryInterface;
+
 
 class ComponentController extends Controller
 {
-    /**
-     * コンポーネント新規作成
-     */
-    public function store(Request $request, $id)
+    private $componentRepo;
+
+    public function __construct(ComponentRepositoryInterface $componentRepo)
     {
-        $page = Page::find($id);
-        $component = new Component;
-        $component->fill($request->all());
-        $page->components()->save($component);
-        return response()->json($component, 201);
+        $this->componentRepo = $componentRepo;
     }
 
     /**
@@ -26,31 +21,18 @@ class ComponentController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $newComponent = [];
-        foreach ($request->all() as $index => $value) {
-            $component = Component::where('id', $value['id'])->first();
+        $newComponent = $this->componentRepo->createOrUpdate($request->all());
 
-            if (is_null($component)){
-                $component = Component::create([
-                    'page_id' => $value['page_id'],
-                    'type' => $value['type'],
-                    'order' => $index+1,
-                ]);
-                $newComponent[] = $component;
-            }
-
-            $component->update(['order' => $index+1]);
-            foreach ($value['columns'] as $columns) {
-                $columns['component_id'] = $component->id;
-                $component->columns()->updateOrCreate(
-                    ['component_id' => $columns['component_id'], 'order' => $columns['order']],
-                    $columns
-                );
-            }
-        }
         if (empty($newComponent)) {
             return response(204);
         }
+
         return response()->json($newComponent, 201);
+    }
+
+    public function destroy(Request $request, $id)
+    {
+        $this->componentRepo->deleteAll($request->all());
+        return response(200);
     }
 }

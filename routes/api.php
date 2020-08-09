@@ -22,4 +22,5 @@ Route::middleware(['cors'])->group(function () {
     Route::resource('pages', 'PageController', ['except' => ['create', 'destroy', 'update']]);
     Route::post('pages/{id}/components', 'ComponentController@store')->name('components.store');
     Route::put('pages/{id}/components', 'ComponentController@update')->name('components.update');
+    Route::delete('pages/{id}/components', 'ComponentController@destroy')->name('components.destroy');
 });

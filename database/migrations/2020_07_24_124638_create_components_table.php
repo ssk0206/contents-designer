@@ -18,9 +18,10 @@ class CreateComponentsTable extends Migration
             $table->unsignedBigInteger('page_id')->comment('ページID');
             $table->integer('type')->comment('コンポーネントタイプ');
             $table->integer('order')->comment('順序');
+            $table->boolean('trash')->default(false)->comment('非表示フラグ');
             $table->timestamps();
 
-            $table->foreign('page_id')->references('id')->on('pages');
+            $table->foreign('page_id')->references('id')->on('pages')->onDelete('cascade');
         });
     }
 
